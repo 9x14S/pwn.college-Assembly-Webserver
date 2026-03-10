@@ -1,5 +1,9 @@
 BITS 64
 
+; CONFIG
+
+%define PORT 0x911f ; 8080 in network order 
+
 ; PARAMETERS
 %define AF_INET 2
 %define SOCK_STREAM 1
@@ -68,7 +72,7 @@ _start:
 
         ; Populate a
         mov word  [a + sockaddr_in.sin_family], AF_INET
-        mov word  [a + sockaddr_in.sin_port], 0x5000
+        mov word  [a + sockaddr_in.sin_port], PORT
         mov dword [a + sockaddr_in.sin_addr], 0x0
 
         ; bind(socket_fd, &a, sizeof(a));
@@ -297,7 +301,7 @@ find_loop:
         inc rdi
         jmp find_loop
 
-find_compare
+find_compare:
         mov rcx, rdi
         mov rdx, 4 ; TODO: make this useful universally
         call strncmp
